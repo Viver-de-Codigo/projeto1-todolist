@@ -1,6 +1,9 @@
+html {
+  font-size: 62.5%;
+}
+
 * {
   font-family: "Inter", Helvetica, sans-serif;
-  font-size: 62.5%;
 }
 
 body {
@@ -61,4 +64,56 @@ body {
 .section-add-task .form-container button span {
   font-size: 1.4rem;
   font-weight: 600;
+}
+
+.tasks-details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.tasks-details .column p {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #7b7b7b;
+}
+
+.tasks-details .column.right p {
+  color: #69d436;
+}
+
+.counterBadge {
+  background-color: #262626;
+  padding: 5px 10px;
+  border-radius: 100px;
+  color: #d9d9d9;
+  margin-left: 3px;
+  font-size: 1.2rem;
+}
+
+.tasks-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tasks-container .task-item {
+  background-color: #262626;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.tasks-container .task-item p {
+  margin: 0;
+  line-height: 140%;
+  font-size: 1.4rem;
+}
+
+.tasks-container .task-item button {
+  background-color: transparent;
+  border: 0;
 }
