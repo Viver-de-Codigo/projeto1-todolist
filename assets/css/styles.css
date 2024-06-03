@@ -103,8 +103,9 @@ body {
   padding: 20px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin: 15px 0;
+  gap: 10px;
 }
 
 .tasks-container .task-item p {
@@ -115,6 +116,31 @@ body {
 }
 
 .tasks-container .task-item button {
+  position: relative;
   background-color: transparent;
   border: 0;
+  cursor: pointer;
+}
+
+.completeTaskBtn {
+  width: 18px;
+  height: 18px;
+}
+
+.completeTaskBtn svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.completeTaskBtn .completed-icon {
+  opacity: 0;
+}
+
+.task-item.completed .completed-icon {
+  opacity: 1;
+}
+
+.task-item.completed .uncompleted-icon {
+  opacity: 0;
 }
