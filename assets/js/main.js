@@ -51,6 +51,33 @@ const handleCompleteTask = (taskIndex) => {
   handleUpdateTaskBadges();
 };
 
+const handleRemoveTask = (taskIndex) => {
+  console.log("taskIndex", taskIndex);
+  const taskElement = document.querySelector(`#task-item-${taskIndex}`);
+
+  if (!taskElement) {
+    return;
+  }
+
+  taskElement.remove();
+
+  const getLocalStorageTasks = window.localStorage.getItem("tasks");
+
+  if (!getLocalStorageTasks) {
+    return;
+  }
+
+  const parsedLocalStorageTasks = JSON.parse(getLocalStorageTasks);
+
+  parsedLocalStorageTasks.splice(taskIndex, 1);
+
+  tasks.splice(taskIndex, 1);
+
+  window.localStorage.setItem("tasks", JSON.stringify(parsedLocalStorageTasks));
+
+  handleUpdateTaskBadges();
+};
+
 const handleTasks = () => {
   const form = document.querySelector("#formElement");
   const tasksContainer = document.querySelector("#tasksContainer");
@@ -125,7 +152,7 @@ const handleTasks = () => {
         </svg>
       </button>
       <p>${task.message}</p>
-      <button>
+      <button onclick="handleRemoveTask(${taskIndex})">
         <svg
           width="24"
           height="24"
@@ -198,7 +225,7 @@ const handleTasks = () => {
     </svg>
       </button>
       <p>${inputValue}</p>
-      <button>
+     <button onclick="handleRemoveTask(${tasks.length - 1})">
         <svg
           width="24"
           height="24"

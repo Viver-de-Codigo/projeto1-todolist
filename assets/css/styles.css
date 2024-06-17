@@ -144,3 +144,8 @@ body {
 .task-item.completed .uncompleted-icon {
   opacity: 0;
 }
+
+.task-item.completed p {
+  text-decoration: line-through;
+  color: #808080;
+}
