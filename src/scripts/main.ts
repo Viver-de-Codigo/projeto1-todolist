@@ -1,5 +1,50 @@
-(()=>{var n=[];for(d=0;d<256;++d)n.push((d+256).toString(16).slice(1));var d;function u(a,t=0){return(n[a[t+0]]+n[a[t+1]]+n[a[t+2]]+n[a[t+3]]+"-"+n[a[t+4]]+n[a[t+5]]+"-"+n[a[t+6]]+n[a[t+7]]+"-"+n[a[t+8]]+n[a[t+9]]+"-"+n[a[t+10]]+n[a[t+11]]+n[a[t+12]]+n[a[t+13]]+n[a[t+14]]+n[a[t+15]]).toLowerCase()}var C,k=new Uint8Array(16);function c(){if(!C&&(C=typeof crypto<"u"&&crypto.getRandomValues&&crypto.getRandomValues.bind(crypto),!C))throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");return C(k)}var h=typeof crypto<"u"&&crypto.randomUUID&&crypto.randomUUID.bind(crypto),m={randomUUID:h};function f(a,t,o){if(m.randomUUID&&!t&&!a)return m.randomUUID();a=a||{};var s=a.random||(a.rng||c)();if(s[6]=s[6]&15|64,s[8]=s[8]&63|128,t){o=o||0;for(var e=0;e<16;++e)t[o+e]=s[e];return t}return u(s)}var p=f;window.addEventListener("load",()=>{customElements.define("tasks-container",g)});var g=class extends HTMLElement{form;tasksContainer;tasks=[];constructor(){super();let t=document.querySelector("#formElement"),o=document.querySelector("#tasksContainer");if(!(!t||!o)){this.form=t,this.tasksContainer=o,this.form.addEventListener("submit",this.handleCreateNewTask.bind(this)),this.handleLocalStorageInit(),this.handleUpdateTaskBadges();for(let s=0;s<this.tasks.length;s++){let e=this.tasks[s];o.insertAdjacentHTML("beforeend",`<li class="task-item${e.completed?" completed":""}" id="task-item-${e.id}">
-        <button id="completeTaskBtn-${e.id}" class="completeTaskBtn">
+import { v4 as uuidv4 } from "uuid";
+
+window.addEventListener("load", () => {
+  customElements.define("tasks-container", Tasks);
+});
+
+interface ITask {
+  id: string;
+  message: string;
+  completed: boolean;
+}
+
+class Tasks extends HTMLElement {
+  form: HTMLFormElement;
+  tasksContainer: HTMLDivElement;
+  tasks: ITask[] = [];
+
+  constructor() {
+    super();
+
+    const form = document.querySelector("#formElement") as HTMLFormElement;
+    const tasksContainer = document.querySelector(
+      "#tasksContainer"
+    ) as HTMLDivElement;
+
+    if (!form || !tasksContainer) {
+      return;
+    }
+
+    this.form = form;
+    this.tasksContainer = tasksContainer;
+    this.form.addEventListener("submit", this.handleCreateNewTask.bind(this));
+
+    // get values from localStorage
+    this.handleLocalStorageInit();
+    // update task badges
+    this.handleUpdateTaskBadges();
+
+    for (let taskIndex = 0; taskIndex < this.tasks.length; taskIndex++) {
+      const task = this.tasks[taskIndex];
+
+      tasksContainer.insertAdjacentHTML(
+        "beforeend",
+        `<li class="task-item${
+          task.completed ? ` completed` : ""
+        }" id="task-item-${task.id}">
+        <button id="completeTaskBtn-${task.id}" class="completeTaskBtn">
           <svg
             class="uncompleted-icon"
             width="18"
@@ -22,8 +67,8 @@
             </g>
           </svg>
         </button>
-        <p>${e.message}</p>
-        <button id="removeTaskBtn-${e.id}">
+        <p>${task.message}</p>
+        <button id="removeTaskBtn-${task.id}">
           <svg
             width="24"
             height="24"
@@ -44,8 +89,97 @@
               fill="#808080"
             />
           </svg>
-        </button></li>`),document.querySelector(`#completeTaskBtn-${e.id}`).addEventListener("click",()=>this.handleCompleteTask(e.id)),document.querySelector(`#removeTaskBtn-${e.id}`).addEventListener("click",()=>this.handleRemoveTask(e.id))}}}handleLocalStorageInit(){let t=window.localStorage.getItem("tasks");if(!t){window.localStorage.setItem("tasks",JSON.stringify([]));return}let o=JSON.parse(t);console.log("parsedTasks",o),this.tasks=o}handleUpdateTaskBadges(){let t=document.querySelector("#completedTasksBadge"),o=document.querySelector("#createdTasksBadge");if(!t||!o)return;o.textContent=String(this.tasks.length);let s=this.tasks.filter(e=>e.completed);t.textContent=`${s.length} de ${this.tasks.length}`}addNewLsTask(t){let o=window.localStorage.getItem("tasks");if(!o)return;let s=JSON.parse(o);s.push(t),window.localStorage.setItem("tasks",JSON.stringify(s))}handleCreateNewTask(t){t.preventDefault();let s=new FormData(t.target).get("add-task"),e={id:p(),message:s,completed:!1};console.log("tasks ahaha",this.tasks),this.tasks.push(e),document.querySelector("#add-task").value="",this.tasksContainer.insertAdjacentHTML("beforeend",`<li class="task-item" id="task-item-${e.id}">
-      <button id="completeTaskBtn-${e.id}" class="completeTaskBtn">
+        </button></li>`
+      );
+
+      const completeTaskBtn = document.querySelector(
+        `#completeTaskBtn-${task.id}`
+      ) as HTMLButtonElement;
+      completeTaskBtn.addEventListener("click", () =>
+        this.handleCompleteTask(task.id)
+      );
+
+      const removeTaskBtn = document.querySelector(
+        `#removeTaskBtn-${task.id}`
+      ) as HTMLButtonElement;
+      removeTaskBtn.addEventListener("click", () =>
+        this.handleRemoveTask(task.id)
+      );
+    }
+  }
+
+  handleLocalStorageInit() {
+    const getLocalStorageTasks = window.localStorage.getItem("tasks");
+
+    if (!getLocalStorageTasks) {
+      window.localStorage.setItem("tasks", JSON.stringify([]));
+      return;
+    }
+
+    const parsedLsTasks = JSON.parse(getLocalStorageTasks);
+
+    console.log("parsedTasks", parsedLsTasks);
+
+    this.tasks = parsedLsTasks;
+  }
+
+  handleUpdateTaskBadges() {
+    const completedTasksBadge = document.querySelector(
+      "#completedTasksBadge"
+    ) as HTMLDivElement;
+    const createdTasksBadge = document.querySelector(
+      "#createdTasksBadge"
+    ) as HTMLDivElement;
+
+    if (!completedTasksBadge || !createdTasksBadge) {
+      return;
+    }
+
+    createdTasksBadge.textContent = String(this.tasks.length);
+
+    const completedTasks = this.tasks.filter((task) => task.completed);
+
+    completedTasksBadge.textContent = `${completedTasks.length} de ${this.tasks.length}`;
+  }
+
+  addNewLsTask(newTaskObj: ITask) {
+    const getLocalStorageTasks = window.localStorage.getItem("tasks");
+    if (!getLocalStorageTasks) {
+      return;
+    }
+
+    const parsedLsTasks = JSON.parse(getLocalStorageTasks);
+
+    parsedLsTasks.push(newTaskObj);
+
+    window.localStorage.setItem("tasks", JSON.stringify(parsedLsTasks));
+  }
+
+  handleCreateNewTask(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const inputValue = formData.get("add-task") as string;
+
+    const newTaskObj: ITask = {
+      id: uuidv4(),
+      message: inputValue,
+      completed: false,
+    };
+
+    console.log("tasks ahaha", this.tasks);
+
+    // adicionar em memoria
+    this.tasks.push(newTaskObj);
+
+    (document.querySelector("#add-task") as HTMLInputElement).value = "";
+
+    // add ao html
+    this.tasksContainer.insertAdjacentHTML(
+      "beforeend",
+      `<li class="task-item" id="task-item-${newTaskObj.id}">
+      <button id="completeTaskBtn-${newTaskObj.id}" class="completeTaskBtn">
       <svg
       class="uncompleted-icon"
       width="18"
@@ -68,8 +202,8 @@
       </g>
     </svg>
       </button>
-      <p>${s}</p>
-     <button id="removeTaskBtn-${e.id}">
+      <p>${inputValue}</p>
+     <button id="removeTaskBtn-${newTaskObj.id}">
         <svg
           width="24"
           height="24"
@@ -91,4 +225,98 @@
           />
         </svg>
       </button>
-    </li>`),document.querySelector(`#completeTaskBtn-${e.id}`).addEventListener("click",()=>this.handleCompleteTask(e.id)),document.querySelector(`#removeTaskBtn-${e.id}`).addEventListener("click",()=>this.handleRemoveTask(e.id)),this.addNewLsTask(e),this.handleUpdateTaskBadges()}handleCompleteTask(t){console.log(`completed task ${t}`);let o=this.tasks.find(i=>i.id===t),s=document.querySelector(`#task-item-${t}`);if(!s||!o)return;o.completed=!0;let e=window.localStorage.getItem("tasks");if(!e)return;let l=JSON.parse(e),r=l.find(i=>i.id===t);r&&(r.completed=!0,window.localStorage.setItem("tasks",JSON.stringify(l)),s.classList.add("completed"),this.handleUpdateTaskBadges())}handleRemoveTask(t){console.log("taskIndex",t);let o=document.querySelector(`#task-item-${t}`);if(!o)return;o.remove();let s=window.localStorage.getItem("tasks");if(!s)return;let e=JSON.parse(s),l=e.findIndex(i=>i.id===t);e.splice(l,1);let r=this.tasks.findIndex(i=>i.id===t);this.tasks.splice(r,1),window.localStorage.setItem("tasks",JSON.stringify(e)),this.handleUpdateTaskBadges()}};})();
+    </li>`
+    );
+
+    const completeTaskBtn = document.querySelector(
+      `#completeTaskBtn-${newTaskObj.id}`
+    ) as HTMLButtonElement;
+    completeTaskBtn.addEventListener("click", () =>
+      this.handleCompleteTask(newTaskObj.id)
+    );
+
+    const removeTaskBtn = document.querySelector(
+      `#removeTaskBtn-${newTaskObj.id}`
+    ) as HTMLButtonElement;
+    removeTaskBtn.addEventListener("click", () =>
+      this.handleRemoveTask(newTaskObj.id)
+    );
+
+    this.addNewLsTask(newTaskObj);
+
+    this.handleUpdateTaskBadges();
+  }
+
+  handleCompleteTask(taskId: string) {
+    console.log(`completed task ${taskId}`);
+
+    const getMemoryTask = this.tasks.find((task) => task.id === taskId);
+    const taskElement = document.querySelector(`#task-item-${taskId}`);
+
+    if (!taskElement || !getMemoryTask) {
+      return;
+    }
+
+    // change completed property in memo
+    getMemoryTask.completed = true;
+
+    // update localStorage task
+    const getLocalStorageTasks = window.localStorage.getItem("tasks");
+    if (!getLocalStorageTasks) {
+      return;
+    }
+
+    const parsedLsTasks: ITask[] = JSON.parse(getLocalStorageTasks);
+
+    const getLsTask = parsedLsTasks.find((task) => task.id === taskId);
+
+    if (!getLsTask) {
+      return;
+    }
+
+    getLsTask.completed = true;
+
+    window.localStorage.setItem("tasks", JSON.stringify(parsedLsTasks));
+
+    // add completed task to html
+    taskElement.classList.add("completed");
+
+    this.handleUpdateTaskBadges();
+  }
+
+  handleRemoveTask(taskId: string) {
+    console.log("taskIndex", taskId);
+    const taskElement = document.querySelector(`#task-item-${taskId}`);
+
+    if (!taskElement) {
+      return;
+    }
+
+    taskElement.remove();
+
+    const getLocalStorageTasks = window.localStorage.getItem("tasks");
+
+    if (!getLocalStorageTasks) {
+      return;
+    }
+
+    const parsedLocalStorageTasks: ITask[] = JSON.parse(getLocalStorageTasks);
+
+    const getLsTaskIndex = parsedLocalStorageTasks.findIndex(
+      (task) => task.id === taskId
+    );
+
+    parsedLocalStorageTasks.splice(getLsTaskIndex, 1);
+
+    const getTaskIndex = this.tasks.findIndex((task) => task.id === taskId);
+
+    this.tasks.splice(getTaskIndex, 1);
+
+    window.localStorage.setItem(
+      "tasks",
+      JSON.stringify(parsedLocalStorageTasks)
+    );
+
+    this.handleUpdateTaskBadges();
+  }
+}

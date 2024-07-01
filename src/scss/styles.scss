@@ -1,0 +1,151 @@
+html {
+  font-size: 62.5%;
+}
+
+* {
+  font-family: "Inter", Helvetica, sans-serif;
+}
+
+body {
+  background-color: #0d0d0d;
+  color: #f2f2f2;
+  font-size: 1.4rem;
+}
+
+.section-header header {
+  text-align: center;
+}
+
+.section-header header h1 {
+  font-size: 4rem;
+  font-weight: 800;
+}
+
+.container {
+  width: 100%;
+  max-width: 736px;
+  margin: 0 auto;
+}
+
+.section-add-task .form-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-add-task .form-container input {
+  width: 90%;
+  background-color: #262626;
+  border-radius: 8px;
+  border: 0;
+  padding: 10px;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #808080;
+  outline: none;
+  height: calc(54px - 20px);
+}
+
+.section-add-task .form-container button {
+  width: 10%;
+  min-width: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  height: 54px;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.section-add-task .form-container button span {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.tasks-details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.tasks-details .column p {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #7b7b7b;
+}
+
+.tasks-details .column.right p {
+  color: #69d436;
+}
+
+.counterBadge {
+  background-color: #262626;
+  padding: 5px 10px;
+  border-radius: 100px;
+  color: #d9d9d9;
+  margin-left: 3px;
+  font-size: 1.2rem;
+}
+
+.tasks-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tasks-container .task-item {
+  background-color: #262626;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+  gap: 10px;
+}
+
+.tasks-container .task-item p {
+  margin: 0;
+  line-height: 140%;
+  font-size: 1.4rem;
+  width: 100%;
+}
+
+.tasks-container .task-item button {
+  position: relative;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.completeTaskBtn {
+  width: 18px;
+  height: 18px;
+}
+
+.completeTaskBtn svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.completeTaskBtn .completed-icon {
+  opacity: 0;
+}
+
+.task-item.completed .completed-icon {
+  opacity: 1;
+}
+
+.task-item.completed .uncompleted-icon {
+  opacity: 0;
+}
+
+.task-item.completed p {
+  text-decoration: line-through;
+  color: #808080;
+}
