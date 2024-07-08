@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "npm-run-all -p dev:*",
     "dev:styles": "sass --watch --no-source-map src/scss:assets/css --style compressed",
-    "dev:scripts": "esbuild src/scripts/* --outdir=assets/js --tsconfig=tsconfig.json --bundle --minify --watch",
+    "dev:scripts": "esbuild src/scripts/* --outdir=assets/js --tsconfig=tsconfig.json --bundle --watch",
+    "build": "npm-run-all -p build:*",
+    "build:styles": "sass --no-source-map src/scss:assets/css --style compressed",
+    "build:scripts": "esbuild src/scripts/* --outdir=assets/js --tsconfig=tsconfig.json --bundle --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
